@@ -1,0 +1,15 @@
+artifact_uri: file:///workspaces/MLops-Lab/mlruns/0/f23745a075604395968a06a58d9d82c1/artifacts
+end_time: 1774933930699
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: f23745a075604395968a06a58d9d82c1
+run_name: build_vector_index
+run_uuid: f23745a075604395968a06a58d9d82c1
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1774933100067
+status: 4
+tags: []
+user_id: codespace
