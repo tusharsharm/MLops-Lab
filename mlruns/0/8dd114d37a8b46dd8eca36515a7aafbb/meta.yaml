@@ -1,5 +1,5 @@
 artifact_uri: file:///workspaces/MLops-Lab/mlruns/0/8dd114d37a8b46dd8eca36515a7aafbb/artifacts
-end_time: null
+end_time: 1774935199480
 entry_point_name: ''
 experiment_id: '0'
 lifecycle_stage: active
@@ -10,6 +10,6 @@ source_name: ''
 source_type: 4
 source_version: ''
 start_time: 1774934364156
-status: 1
+status: 3
 tags: []
 user_id: codespace
