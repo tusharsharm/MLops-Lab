@@ -1,13 +1,17 @@
 # Multi-target Dockerfile for MLops-Lab (workspace root)
 
 ### Frontend target (dev)
-FROM node:18-bullseye-slim AS frontend
+FROM node:20-bullseye-slim AS frontend
 WORKDIR /app
 COPY ipc-rag-predictor/frontend/package.json ipc-rag-predictor/frontend/package-lock.json ./
-RUN npm install --silent --no-audit --no-fund
+# Install including devDependencies so build tools like `vite` are available
+RUN npm install --include=dev
 COPY ipc-rag-predictor/frontend/ ./
+# Ensure vite CLI is available at build time and build static frontend
+RUN npm install -g vite@8 && npx vite build
+RUN npm install -g serve --silent --no-audit --no-fund
 EXPOSE 5173
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["serve", "-s", "dist", "-l", "5173"]
 
 ### API target
 FROM python:3.11-slim AS api

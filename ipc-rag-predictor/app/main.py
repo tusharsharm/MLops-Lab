@@ -23,9 +23,14 @@ async def lifespan(app: FastAPI):
     logger.info("Starting IPC RAG Prediction Service")
     
     # Try to load existing index
-    vector_store = VectorStore()
-    if not vector_store.load_index():
-        logger.warning("No existing index found. Use POST /build-index endpoint first.")
+    # Optionally skip heavy initialization during fast dev runs
+    import os
+    if os.getenv("DEV_SKIP_INIT") != "1":
+        vector_store = VectorStore()
+        if not vector_store.load_index():
+            logger.warning("No existing index found. Use POST /build-index endpoint first.")
+    else:
+        logger.info("Skipping VectorStore initialization (DEV_SKIP_INIT=1)")
     
     predictor = Predictor()
     logger.info("Application startup completed")

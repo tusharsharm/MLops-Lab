@@ -1,0 +1,6 @@
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;line-height:1.4;margin:24px}
+main{max-width:800px;margin:0 auto}
+pre#response{background:#f6f8fa;border:1px solid #e1e4e8;padding:12px;white-space:pre-wrap}
+form{display:flex;gap:8px;margin:12px 0}
+input#q{flex:1;padding:8px}
+button{padding:8px 12px}
