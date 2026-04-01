@@ -63,8 +63,3 @@ Troubleshooting
 - If native ML packages like `faiss` or `sentence-transformers` fail to install, the code provides fallbacks so you can still run basic functionality.
 - Ensure `data/` contains the `ipc_book.pdf` file before building the index.
 
-If you want, I can:
-- add a `docker-compose.dev.yml` override to keep production compose unchanged, or
-- add a VS Code `tasks.json` and `launch.json` to automate the dev workflow.
-
-Sub-README files have been consolidated into this single top-level README.
