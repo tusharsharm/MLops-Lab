@@ -27,15 +27,10 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile
-      target: frontend
+      context: ./ipc-rag-predictor
+      dockerfile: Dockerfile.simple-frontend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./ipc-rag-predictor/frontend:/app:delegated
-      - /app/node_modules
-    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+      - "5173:80"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5173/ || exit 1"]
