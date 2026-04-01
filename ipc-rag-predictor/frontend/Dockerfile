@@ -4,7 +4,8 @@ WORKDIR /app
 
 # Install deps
 COPY package.json package-lock.json ./
-RUN npm ci --silent
+# Use npm install to avoid issues with lockfile/platform mismatches in CI
+RUN npm install --silent --no-audit --no-fund
 
 # Copy source
 COPY . .
