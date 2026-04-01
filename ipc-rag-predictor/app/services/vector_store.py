@@ -57,6 +57,11 @@ class VectorStore:
             embedding_array = np.array(embeddings).astype('float32')
 
             if self._use_faiss:
+                # Normalize embeddings to unit vectors for inner-product (cosine) similarity
+                norms = np.linalg.norm(embedding_array, axis=1, keepdims=True)
+                norms[norms == 0] = 1e-12
+                embedding_array = embedding_array / norms
+
                 dimension = embedding_array.shape[1]
                 self.index = faiss.IndexFlatIP(dimension)
                 self.index.add(embedding_array)
@@ -109,6 +114,11 @@ class VectorStore:
 
         results = []
         if self._use_faiss and hasattr(self.index, 'search'):
+            # Normalize query to match index normalization
+            qnorm = np.linalg.norm(query_array, axis=1, keepdims=True)
+            qnorm[qnorm == 0] = 1e-12
+            query_array = query_array / qnorm
+
             distances, indices = self.index.search(query_array, top_k)
             for idx, dist in zip(indices[0], distances[0]):
                 if idx < len(self.sections):

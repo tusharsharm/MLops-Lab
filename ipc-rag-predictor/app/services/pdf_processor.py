@@ -18,38 +18,48 @@ class PDFProcessor:
         doc = fitz.open(self.pdf_path)
         sections = []
         current_section = None
-        current_text = []
+        current_title = None
+        current_text: List[str] = []
+
+        # Detect IPC section headers (e.g., "Section 302", "302. Punishment for murder")
+        section_pattern = r'(?:Section\s+)?(\d+[A-Za-z]*)\.?\s*(.+?)(?=\n(?:Section\s+)?\d+[A-Za-z]*\.|\Z)'
 
         for page_num in range(len(doc)):
             page = doc.load_page(page_num)
             text = page.get_text("text")
 
-            # Detect IPC section headers (e.g., "Section 302", "302. Punishment for murder")
-            section_pattern = r'(?:Section\s+)?(\d+[A-Za-z]*)\.?\s*(.+?)(?=\n(?:Section\s+)?\d+[A-Za-z]*\.|\Z)'
-            matches = re.finditer(section_pattern, text, re.MULTILINE | re.DOTALL)
+            matches = list(re.finditer(section_pattern, text, re.MULTILINE | re.DOTALL))
 
-            for match in matches:
-                section_num = match.group(1).strip()
-                title = match.group(2).strip() if match.group(2) else ""
+            if matches:
+                for match in matches:
+                    section_num = match.group(1).strip()
+                    title = match.group(2).strip() if match.group(2) else ""
 
-                if current_section and current_text:
-                    sections.append({
-                        "section": current_section,
-                        "title": title,
-                        "content": " ".join(current_text).strip()
-                    })
+                    # If we were collecting a previous section, save it using its stored title
+                    if current_section is not None and current_text:
+                        sections.append({
+                            "section": current_section,
+                            "title": current_title or "",
+                            "content": " ".join(current_text).strip()
+                        })
 
-                current_section = section_num
-                current_text = [text[match.end():].strip()]
+                    # Start a new section from the current match
+                    current_section = section_num
+                    current_title = title
+                    # Start section text from the remainder of the page after the match
+                    current_text = [text[match.end():].strip()]
 
-            if current_section:
-                current_text.append(text)
+                # do not append the whole page again (we already captured the remainder)
+            else:
+                # No section header on this page; append page text to current section (if any)
+                if current_section is not None:
+                    current_text.append(text)
 
-        # Add the last section
-        if current_section and current_text:
+        # Add the last section if present
+        if current_section is not None and current_text:
             sections.append({
                 "section": current_section,
-                "title": "",
+                "title": current_title or "",
                 "content": " ".join(current_text).strip()
             })
 
