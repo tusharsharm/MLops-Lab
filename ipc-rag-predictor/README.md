@@ -76,5 +76,3 @@ Notes for Codespaces:
 Troubleshooting & tips:
 - If `faiss` or `sentence-transformers` fail to install on your environment, the app includes fallbacks (numpy-based search or TF-IDF) so you can still run and test the service.  
 - Ensure `data/faiss_index` exists and is writable if you expect FAISS index persistence. The code will attempt to create it automatically.
-
-If you'd like, I can add a single-command VS Code `tasks.json` or a `.devcontainer` for Codespaces to fully automate this.
